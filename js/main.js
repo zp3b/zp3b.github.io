@@ -93,7 +93,7 @@ function renderVersion(version, shouldAnimate = false, oldVersion = null) {
     const btn = document.getElementById("download-latest");
     if (!btn) return;
     btn.innerHTML = DOWNLOAD_ICON;
-    btn.appendChild(document.createTextNode("Download Bubblestrap "));
+    btn.appendChild(document.createTextNode("Download Flowerstrap "));
 
     if (!shouldAnimate || !oldVersion || oldVersion === version) {
         btn.appendChild(document.createTextNode(version));
