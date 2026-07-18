@@ -120,43 +120,6 @@ body {
     nav ul { display: flex; gap: 25px; list-style: none; align-items: center; }
     nav ul li a { color: #fff; font-size: 0.9rem; font-weight: 600; opacity: 0.6; transition: opacity 0.3s, color 0.3s; }
 
-    .bubble-container {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        z-index: -1;
-        background: radial-gradient(circle at center, #3b102f 0%, #140817 100%);
-        overflow: hidden;
-        pointer-events: none;
-        isolation: isolate;
-        will-change: transform;
-    }
-
-    .bubble {
-        position: absolute;
-        top: 100lvh;
-        background: linear-gradient(135deg, rgba(255, 212, 233, 0.1), rgba(255, 163, 192, 0.1));
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-        will-change: transform, opacity;
-        animation: float 22s infinite linear;
-        contain: strict;
-        transform: translate3d(0, 0, 0);
-        backface-visibility: hidden;
-    }
-
-    @keyframes float {
-        0% { transform: translate3d(0, 0, 0); opacity: 0; }
-        10% { opacity: 0.4; }
-        90% { opacity: 0.4; }
-        100% { transform: translate3d(0, -125lvh, 0); opacity: 0; }
-    }
-
-    .bubble:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: -2s; animation-duration: 18s; }
-    .bubble:nth-child(2) { left: 30%; width: 120px; height: 120px; animation-delay: -8s; animation-duration: 25s; }
-    .bubble:nth-child(3) { left: 50%; width: 60px; height: 60px; animation-delay: -14s; animation-duration: 20s; }
-    .bubble:nth-child(4) { left: 80%; width: 100px; height: 100px; animation-delay: -5s; animation-duration: 22s; }
-    .bubble:nth-child(5) { left: 15%; width: 40px; height: 40px; animation-delay: -18s; animation-duration: 15s; }
-
     .hero {
         height: 100vh;
         display: flex;
