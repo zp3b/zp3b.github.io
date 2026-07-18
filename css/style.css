@@ -27,7 +27,7 @@ body {
 
 
 /* =========================
-   ANIMATED WAVE BACKGROUND
+   ANIMATED OCEAN WAVES
 ========================= */
 
 .wave-background {
@@ -42,73 +42,79 @@ body {
 
 .wave {
     position: absolute;
-    width: 200%;
-    height: 350px;
-    left: -50%;
-    bottom: -180px;
-    border-radius: 50%;
-    filter: blur(45px);
-    animation: waveMove 14s ease-in-out infinite alternate;
+    width: 220%;
+    height: 260px;
+    left: -60%;
+    bottom: -90px;
+    border-radius: 50% 50% 0 0;
+    animation: oceanWave 14s ease-in-out infinite alternate;
 }
 
 
 .wave-one {
     background: linear-gradient(
-        90deg,
-        rgba(236,72,153,0.35),
-        rgba(168,85,247,0.35)
+        180deg,
+        rgba(244,114,182,0.35),
+        rgba(168,85,247,0.05)
     );
 }
 
 
 .wave-two {
-    bottom: -220px;
-    opacity: .55;
+    bottom: -140px;
+    opacity: .7;
     background: linear-gradient(
-        90deg,
-        rgba(244,114,182,0.3),
-        rgba(139,92,246,0.35)
+        180deg,
+        rgba(236,72,153,0.25),
+        rgba(20,8,23,0)
     );
     animation-duration: 20s;
 }
 
 
 .wave-three {
-    bottom: -260px;
-    opacity: .35;
+    bottom: -190px;
+    opacity: .45;
     background: linear-gradient(
-        90deg,
-        rgba(255,92,168,0.25),
-        rgba(125,211,252,0.2)
+        180deg,
+        rgba(125,211,252,0.18),
+        rgba(20,8,23,0)
     );
     animation-duration: 28s;
 }
 
 
-@keyframes waveMove {
+@keyframes oceanWave {
 
-    from {
+    0% {
         transform:
-            translateX(-10%)
-            rotate(-4deg);
+            translateX(-8%)
+            translateY(0)
+            rotate(-2deg);
     }
 
-    to {
+    50% {
         transform:
-            translateX(10%)
-            rotate(4deg);
+            translateX(8%)
+            translateY(-25px)
+            rotate(2deg);
+    }
+
+    100% {
+        transform:
+            translateX(-5%)
+            translateY(5px)
+            rotate(-1deg);
     }
 
 }
 
 
-/* Keep website above waves */
+/* Keep content above waves */
 
 .hero,
 section,
-footer,
-nav,
-.social-header {
+footer {
     position: relative;
     z-index: 2;
 }
@@ -197,11 +203,13 @@ nav,
     position: fixed;
     top:20px;
     right:30px;
+    z-index:100;
     display:flex;
     gap:15px;
     padding:10px 20px;
     background:rgba(255,255,255,.03);
     backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
     border:1px solid rgba(255,255,255,.1);
     border-radius:999px;
     align-items:center;
@@ -220,9 +228,11 @@ nav {
     top:20px;
     left:50%;
     transform:translateX(-50%);
+    z-index:90;
     padding:10px 25px;
     background:rgba(255,100,180,.06);
     backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
     border:1px solid rgba(255,255,255,.1);
     border-radius:999px;
 }
