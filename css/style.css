@@ -134,7 +134,7 @@
     .bubble {
         position: absolute;
         top: 100lvh;
-        background: linear-gradient(135deg, rgba(125, 211, 252, 0.1), rgba(192, 132, 252, 0.1));
+        background: linear-gradient(135deg, rgba(255, 212, 233, 0.1), rgba(255, 163, 192, 0.1));
         border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 50%;
         will-change: transform, opacity;
