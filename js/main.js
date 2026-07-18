@@ -40,7 +40,7 @@ async function setVersionText() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         
-        const res = await fetch("https://api.github.com/repos/ItzBloxxy/Bubblestrap/releases/latest", {
+        const res = await fetch("https://api.github.com/repos/Zp3b/Flowerstrap/releases/latest", {
             signal: controller.signal
         });
         clearTimeout(timeoutId);
