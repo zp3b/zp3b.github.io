@@ -1,166 +1,239 @@
-const DOWNLOAD_ICON = `<span class="icon icon-download btn-icon"></span> `;
+/*
+==========================================
+Flowerstrap Website
+main.js
+==========================================
+*/
 
-function initObserver() {
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ==========================
+       Mouse Glow
+    ========================== */
+
+    const glow = document.getElementById("mouse-glow");
+
+    document.addEventListener("mousemove", e => {
+
+        glow.style.left = `${e.clientX}px`;
+        glow.style.top = `${e.clientY}px`;
+
+    });
+
+
+    /* ==========================
+       Navbar Scroll Effect
+    ========================== */
+
+    const nav = document.querySelector("nav");
+
+    window.addEventListener("scroll", () => {
+
+        if (window.scrollY > 50) {
+
+            nav.style.background = "rgba(20,15,35,.82)";
+            nav.style.backdropFilter = "blur(30px)";
+            nav.style.borderColor = "rgba(255,255,255,.18)";
+            nav.style.boxShadow = "0 15px 40px rgba(0,0,0,.25)";
+
+        } else {
+
+            nav.style.background = "";
+            nav.style.boxShadow = "";
+
+        }
+
+    });
+
+
+    /* ==========================
+       Fade In
+    ========================== */
+
     const observer = new IntersectionObserver(entries => {
+
         entries.forEach(entry => {
+
             if (entry.isIntersecting) {
-                const el = entry.target;
 
-                requestAnimationFrame(() => {
-                    el.classList.add("active");
-                });
-                
-                observer.unobserve(el);
+                entry.target.classList.add("visible");
+
             }
+
         });
-    }, { threshold: 0.05 });
 
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-}
+    }, {
 
-async function setVersionText() {
-    const cacheKey = "bs_version_cache";
-    const cacheExpiry = 3600000; // 1 hour
-    const now = Date.now();
+        threshold: .15
 
-    let cachedData = null;
-    try { 
-        cachedData = JSON.parse(localStorage.getItem(cacheKey)); 
-    } catch {
-        // silent catch for disabled or full localStorage
-    }
+    });
 
-    // show cached version if it's valid
-    if (cachedData && (now - cachedData.timestamp < cacheExpiry)) {
-        renderVersion(cachedData.version);
-        return;
-    }
+    document.querySelectorAll(".feature-card,.section-title,.hero-left,.hero-right")
+        .forEach(el => {
 
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        
-        const res = await fetch("https://api.github.com/repos/zp3b/Flowerstrap/releases/latest", {
-            signal: controller.signal
+            el.classList.add("hidden");
+
+            observer.observe(el);
+
         });
-        clearTimeout(timeoutId);
-        
-        if (!res.ok) return;
 
-        const data = await res.json();
-        const newVersion = data.tag_name;
-        if (!newVersion) return;
 
-        const oldVersion = cachedData?.version;
-        const isNewUpdate = oldVersion && oldVersion !== newVersion;
+    /* ==========================
+       Dropdown
+    ========================== */
 
-        try {
-            localStorage.setItem(cacheKey, JSON.stringify({ version: newVersion, timestamp: now }));
-        } catch {}
+    const button = document.getElementById("pagesButton");
+    const menu = document.querySelector(".dropdown-menu");
 
-        renderVersion(newVersion, isNewUpdate, oldVersion);
-    } catch (err) {
-        console.warn("Update check failed.");
+    button.addEventListener("click", e => {
+
+        e.stopPropagation();
+
+        menu.classList.toggle("open");
+
+    });
+
+    document.addEventListener("click", () => {
+
+        menu.classList.remove("open");
+
+    });
+
+
+    /* ==========================
+       Hero Parallax
+    ========================== */
+
+    const hero = document.querySelector(".hero");
+
+    window.addEventListener("scroll", () => {
+
+        const y = window.scrollY;
+
+        hero.style.transform = `translateY(${y * .08}px)`;
+
+    });
+
+
+    /* ==========================
+       Floating Preview Card
+    ========================== */
+
+    const card = document.querySelector(".preview-card");
+
+    let time = 0;
+
+    function animateCard(){
+
+        time += .02;
+
+        const y = Math.sin(time) * 10;
+
+        const rotate = Math.sin(time/2) * 2;
+
+        card.style.transform =
+        `translateY(${y}px) rotate(${rotate}deg)`;
+
+        requestAnimationFrame(animateCard);
+
     }
-}
 
-function diffVersions(oldV, newV) {
-    let prefixLen = 0;
-    while (prefixLen < oldV.length && prefixLen < newV.length && oldV[prefixLen] === newV[prefixLen]) {
-        prefixLen++;
-    }
+    animateCard();
 
-    const oldRest = oldV.slice(prefixLen);
-    const newRest = newV.slice(prefixLen);
 
-    let suffixLen = 0;
-    while (
-        suffixLen < oldRest.length && suffixLen < newRest.length &&
-        oldRest[oldRest.length - 1 - suffixLen] === newRest[newRest.length - 1 - suffixLen]
-    ) {
-        suffixLen++;
-    }
+    /* ==========================
+       Download Button Ripple
+    ========================== */
 
-    return {
-        prefix: oldV.slice(0, prefixLen),
-        oldMiddle: oldRest.slice(0, oldRest.length - suffixLen),
-        newMiddle: newRest.slice(0, newRest.length - suffixLen),
-        suffix: suffixLen > 0 ? oldRest.slice(oldRest.length - suffixLen) : ""
-    };
-}
+    const download = document.querySelector(".download-btn");
 
-function renderVersion(version, shouldAnimate = false, oldVersion = null) {
-    const btn = document.getElementById("download-latest");
-    if (!btn) return;
-    btn.innerHTML = DOWNLOAD_ICON;
-    btn.appendChild(document.createTextNode("Download Flowerstrap "));
+    download.addEventListener("click", e => {
 
-    if (!shouldAnimate || !oldVersion || oldVersion === version) {
-        btn.appendChild(document.createTextNode(version));
-        return;
-    }
+        const ripple = document.createElement("span");
 
-    const { prefix, oldMiddle, newMiddle, suffix } = diffVersions(oldVersion, version);
-    btn.appendChild(document.createTextNode(prefix));
+        ripple.className = "ripple";
 
-    if (oldMiddle || newMiddle) {
-        const roll = document.createElement("span");
-        roll.className = "version-roll";
+        ripple.style.left = `${e.offsetX}px`;
+        ripple.style.top = `${e.offsetY}px`;
 
-        const inner = document.createElement("span");
-        inner.className = "version-roll-inner";
+        download.appendChild(ripple);
 
-        const oldSpan = document.createElement("span");
-        oldSpan.className = "version-roll-line";
-        oldSpan.textContent = oldMiddle;
+        setTimeout(() => {
 
-        const newSpan = document.createElement("span");
-        newSpan.className = "version-roll-line";
-        newSpan.textContent = newMiddle;
+            ripple.remove();
 
-        inner.append(oldSpan, newSpan);
-        roll.appendChild(inner);
-        btn.appendChild(roll);
+        },700);
 
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => roll.classList.add("rolling"));
+    });
+
+
+    /* ==========================
+       Feature Card Tilt
+    ========================== */
+
+    document.querySelectorAll(".feature-card").forEach(card => {
+
+        card.addEventListener("mousemove", e => {
+
+            const rect = card.getBoundingClientRect();
+
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const rotateX = -(y - rect.height/2)/18;
+            const rotateY = (x - rect.width/2)/18;
+
+            card.style.transform =
+            `perspective(700px)
+             rotateX(${rotateX}deg)
+             rotateY(${rotateY}deg)
+             translateY(-8px)`;
+
         });
-    }
 
-    btn.appendChild(document.createTextNode(suffix));
-}
+        card.addEventListener("mouseleave", () => {
 
-function handleRedirect() {
-    const params = new URLSearchParams(location.search);
-    const placeId = params.get("placeId");
-    if (!placeId || !/^\d+$/.test(placeId)) return; 
+            card.style.transform = "";
 
-    const overlay = document.createElement("div");
-    overlay.id = "join-overlay";
-    overlay.innerHTML = `
-        <div class="loader"></div>
-        <h1 id="join-status">Launching Roblox…</h1>
-        <p style="opacity:.6;margin-bottom:20px;">Launching via Bubblestrap Protocol</p>
-        <a id="manualJoinButton" class="btn" href="#" style="display:inline-flex">Click if not redirected</a>
-    `;
-    document.body.appendChild(overlay);
-    const mainSite = document.getElementById("main-site");
-    if (mainSite) mainSite.style.display = "none";
-    const accessCode = params.get("accessCode");
-    const gameInstanceId = params.get("gameInstanceId");
-    let robloxUrl = `roblox://placeId=${placeId}`;
-    if (accessCode) {
-        robloxUrl += `&accessCode=${encodeURIComponent(accessCode)}`;
-    } else if (gameInstanceId) {
-        robloxUrl += `&gameInstanceId=${encodeURIComponent(gameInstanceId)}`;
-    }
+        });
 
-    document.getElementById("manualJoinButton").href = robloxUrl;
-    setTimeout(() => { location.href = robloxUrl; }, 1500);
-}
+    });
 
-window.addEventListener("DOMContentLoaded", () => {
-    initObserver();
-    handleRedirect();
-    setVersionText();
+
+    /* ==========================
+       Active Navigation
+    ========================== */
+
+    const sections = document.querySelectorAll("section");
+
+    const links = document.querySelectorAll(".nav-links a");
+
+    window.addEventListener("scroll", () => {
+
+        let current = "";
+
+        sections.forEach(section => {
+
+            if (window.scrollY >= section.offsetTop - 180){
+
+                current = section.id;
+
+            }
+
+        });
+
+        links.forEach(link => {
+
+            link.classList.remove("active");
+
+            if(link.getAttribute("href") === `#${current}`){
+
+                link.classList.add("active");
+
+            }
+
+        });
+
+    });
+
 });
