@@ -665,3 +665,160 @@ footer{
     color:var(--muted);
 
 }
+
+/* Mouse Glow */
+
+#mouse-glow{
+
+    position:fixed;
+
+    width:450px;
+    height:450px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    transform:translate(-50%,-50%);
+
+    background:radial-gradient(circle,
+    rgba(255,90,220,.20),
+    transparent 70%);
+
+    filter:blur(40px);
+
+    z-index:-2;
+
+}
+
+/* Fade */
+
+.hidden{
+
+    opacity:0;
+
+    transform:translateY(50px);
+
+    transition:.8s ease;
+
+}
+
+.visible{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/* Dropdown */
+
+.dropdown{
+
+    position:relative;
+
+}
+
+.dropdown-menu{
+
+    position:absolute;
+
+    top:50px;
+
+    left:0;
+
+    width:180px;
+
+    border-radius:18px;
+
+    background:rgba(20,15,35,.9);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    overflow:hidden;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:translateY(10px);
+
+    transition:.3s;
+
+}
+
+.dropdown-menu.open{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+
+}
+
+.dropdown-menu a{
+
+    display:block;
+
+    padding:15px;
+
+}
+
+.dropdown-menu a:hover{
+
+    background:rgba(255,255,255,.05);
+
+}
+
+/* Ripple */
+
+.download-btn{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.ripple{
+
+    position:absolute;
+
+    width:20px;
+
+    height:20px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.4);
+
+    transform:translate(-50%,-50%);
+
+    animation:ripple .7s linear;
+
+}
+
+@keyframes ripple{
+
+    to{
+
+        width:450px;
+
+        height:450px;
+
+        opacity:0;
+
+    }
+
+}
+
+/* Active Link */
+
+.active{
+
+    color:#ff63d9 !important;
+
+}
