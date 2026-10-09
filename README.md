@@ -1,1 +1,1 @@
-All original source code is from itsbloxxy !
+Dont tell the teachers !
