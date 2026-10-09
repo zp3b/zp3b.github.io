@@ -3,536 +3,275 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CalcX</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090a0e;color:white;font-family:Arial,sans-serif}
+.calculator{width:min(350px,94vw);padding:24px;background:#141721;border:1px solid #292b34;border-radius:24px;box-shadow:0 25px 80px #0008}
+.calculator h2{color:#67e8f9}
+#display{width:100%;padding:20px 12px;margin-bottom:14px;border:1px solid #252b39;border-radius:14px;background:#090c13;color:white;font-size:28px;text-align:right}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+button{padding:13px 10px;border:1px solid #343744;border-radius:12px;background:#282c39;color:white;font-size:15px;cursor:pointer}
+button:hover{filter:brightness(1.2)}
+.op{background:#087e99}
+
+/* Full-screen library */
+.library{display:none;position:fixed;inset:0;z-index:9999;overflow:auto;background:#17171c;color:white;padding:16px}
+.topbar{display:flex;align-items:center;gap:14px;padding:12px 16px;background:#222227;border:1px solid #34343b;border-radius:15px}
+.brand{font-size:21px;font-weight:800;white-space:nowrap}
+.search-wrap{flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid #666873;border-radius:30px;background:#1b1b20}
+.search-wrap span{font-size:20px;color:#9ba0af}
+.topbar input{width:100%;min-width:0;padding:13px 0;border:0;outline:0;background:transparent;color:white;font-size:14px}
+.topbar input::placeholder{color:#9296a6}
+.exit{background:#3985ff;border:0;font-weight:bold;padding:13px 22px}
+.categories{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.categories button{padding:10px 15px;border:1px solid #393a44;border-radius:25px;background:#292a32;color:#eee;white-space:nowrap}
+.categories button.active{background:#087e99;border-color:#087e99}
+
+/* 25 image tiles */
+.game-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:clamp(48px,5vw,78px);grid-auto-flow:dense;gap:12px}
+.game-card{position:relative;min-width:0;min-height:0;overflow:hidden;border-radius:13px;background:#20232d;cursor:pointer;isolation:isolate;transition:transform .18s,box-shadow .18s}
+.game-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px #0008}
+.game-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .3s}
+.game-card:hover img{transform:scale(1.06)}
+.game-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#000d,transparent 75%)}
+.game-info{position:absolute;bottom:0;left:0;right:0;padding:12px 10px;color:white;font-weight:800;font-size:14px;text-shadow:0 2px 5px #000}
+.game-info small{display:block;margin-top:4px;color:#ddd;font-weight:normal;font-size:11px}
+.size-normal{grid-column:span 2;grid-row:span 2}
+.size-wide{grid-column:span 4;grid-row:span 2}
+.size-tall{grid-column:span 2;grid-row:span 4}
+.size-large{grid-column:span 4;grid-row:span 4}
+.empty{text-align:center;padding:30px;color:#aaa}
+
+@media(min-width:1200px){
+ .game-grid{grid-auto-rows:4.2vw}
 }
-
-:root {
-  --bg: #090a0e;
-  --panel: #1c1d23;
-  --muted: #9699a5;
-  --blue: #3985ff;
+@media(max-width:800px){
+ .library{padding:10px}
+ .topbar{flex-wrap:wrap}
+ .brand{flex:1}
+ .search-wrap{order:3;flex-basis:100%}
+ .game-grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:55px;gap:8px}
+ .size-normal{grid-column:span 2;grid-row:span 2}
+ .size-wide{grid-column:span 4;grid-row:span 2}
+ .size-tall{grid-column:span 2;grid-row:span 4}
+ .size-large{grid-column:span 4;grid-row:span 4}
 }
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: var(--bg);
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-/* CALCULATOR */
-.calculator {
-  width: min(350px, 94vw);
-  padding: 24px;
-  border: 1px solid #292b34;
-  background: #141721;
-  border-radius: 24px;
-  box-shadow: 0 25px 80px #0008;
-}
-
-.calculator h2 {
-  color: #67e8f9;
-}
-
-#display {
-  width: 100%;
-  padding: 20px 12px;
-  margin-bottom: 14px;
-  border: 1px solid #252b39;
-  border-radius: 14px;
-  background: #090c13;
-  color: white;
-  font-size: 28px;
-  text-align: right;
-}
-
-.keys {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-}
-
-button {
-  padding: 14px 10px;
-  border: 1px solid #343744;
-  border-radius: 12px;
-  background: #282c39;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background .15s, transform .15s;
-}
-
-button:hover {
-  background: #3b4051;
-}
-
-button:active {
-  transform: scale(.96);
-}
-
-.op {
-  background: #087e99;
-  border-color: #087e99;
-}
-
-/* FULL SCREEN GAME LIBRARY */
-.library {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  overflow: auto;
-  background: #17171c;
-  color: white;
-  padding: 18px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  background: #222227;
-  border: 1px solid #34343b;
-  border-radius: 16px;
-}
-
-.brand {
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -.6px;
-  white-space: nowrap;
-}
-
-.search-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 15px;
-  border: 1px solid #666873;
-  border-radius: 30px;
-  background: #1b1b20;
-}
-
-.search-wrap span {
-  color: #9ba0af;
-  font-size: 20px;
-}
-
-.topbar input {
-  width: 100%;
-  min-width: 0;
-  padding: 13px 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: white;
-  font-size: 14px;
-}
-
-.topbar input::placeholder {
-  color: #9296a6;
-}
-
-.exit {
-  padding: 12px 22px;
-  border: 0;
-  border-radius: 11px;
-  background: var(--blue);
-  font-weight: 700;
-}
-
-.categories {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  margin: 18px 0;
-}
-
-.categories button {
-  padding: 10px 15px;
-  border: 1px solid #393a44;
-  border-radius: 25px;
-  background: #292a32;
-  color: #e3e5ed;
-  white-space: nowrap;
-}
-
-.categories button:hover,
-.categories button.active {
-  background: #414654;
-  border-color: #62697b;
-}
-
-/* GRID WITH 25 BOXES */
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-auto-rows: 64px;
-  grid-auto-flow: dense;
-  gap: 12px;
-}
-
-.game-card {
-  position: relative;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  border-radius: 13px;
-  background: #fff;
-  border: 1px solid #ffffff;
-  cursor: pointer;
-  transition: transform .18s, box-shadow .18s;
-}
-
-.game-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px #0006;
-}
-
-/* Normal boxes */
-.game-card.size-normal {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-/* Double-wide boxes */
-.game-card.size-wide {
-  grid-column: span 4;
-  grid-row: span 2;
-}
-
-/* Double-tall boxes */
-.game-card.size-tall {
-  grid-column: span 2;
-  grid-row: span 4;
-}
-
-/* Four times the area of a normal box */
-.game-card.size-large {
-  grid-column: span 4;
-  grid-row: span 4;
-}
-
-.empty {
-  padding: 30px 0;
-  color: #aaa;
-  text-align: center;
-}
-
-@media (min-width: 1200px) {
-  .game-grid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-auto-rows: minmax(38px, 4.2vw);
-  }
-}
-
-@media (max-width: 800px) {
-  .library {
-    padding: 10px;
-  }
-
-  .topbar {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .brand {
-    flex: 1;
-  }
-
-  .search-wrap {
-    order: 3;
-    flex-basis: 100%;
-  }
-
-  .game-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-auto-rows: 55px;
-    gap: 8px;
-  }
-
-  .game-card.size-normal {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
-  .game-card.size-wide {
-    grid-column: span 4;
-    grid-row: span 2;
-  }
-
-  .game-card.size-tall {
-    grid-column: span 2;
-    grid-row: span 4;
-  }
-
-  .game-card.size-large {
-    grid-column: span 4;
-    grid-row: span 4;
-  }
-}
-
-@media (max-width: 420px) {
-  .game-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: 52px;
-  }
-
-  .game-card.size-normal {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
-  .game-card.size-wide {
-    grid-column: span 4;
-    grid-row: span 2;
-  }
-
-  .game-card.size-tall {
-    grid-column: span 2;
-    grid-row: span 4;
-  }
-
-  .game-card.size-large {
-    grid-column: span 4;
-    grid-row: span 4;
-  }
+@media(max-width:420px){
+ .game-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:52px}
+ .game-info{font-size:12px;padding:8px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- CALCULATOR -->
 <main class="calculator" id="calculator">
-  <h2>CalcX</h2>
-  <input id="display" value="0" readonly
-         aria-label="Calculator display">
-  <div class="keys" id="keys"></div>
+<h2>CalcX</h2>
+<input id="display" value="0" readonly aria-label="Calculator display">
+<div class="keys" id="keys"></div>
 </main>
 
-<!-- FULL SCREEN LIBRARY -->
 <section class="library" id="library">
-  <header class="topbar">
-    <div class="brand">✦ GameZone</div>
+<header class="topbar">
+<div class="brand">✦ GameZone</div>
+<div class="search-wrap">
+<span>⌕</span>
+<input id="search" placeholder="Search games..." aria-label="Search games">
+</div>
+<button class="exit" id="exit">Exit</button>
+</header>
 
-    <div class="search-wrap">
-      <span>⌕</span>
-      <input id="search" placeholder="Search games..."
-             aria-label="Search games">
-    </div>
+<nav class="categories" id="categories">
+<button class="active" data-category="All">✨ All</button>
+<button data-category="Action">💥 Action</button>
+<button data-category="Arcade">🕹️ Arcade</button>
+<button data-category="Puzzle">🧩 Puzzle</button>
+<button data-category="Racing">🏎️ Racing</button>
+<button data-category="Adventure">🗺️ Adventure</button>
+<button data-category="Sports">⚽ Sports</button>
+<button data-category="Casual">🎯 Casual</button>
+</nav>
 
-    <button class="exit" id="exit">Exit</button>
-  </header>
-
-  <nav class="categories" id="categories">
-    <button class="active" data-category="All">✨ All</button>
-    <button data-category="Action">💥 Action</button>
-    <button data-category="Arcade">🕹️ Arcade</button>
-    <button data-category="Puzzle">🧩 Puzzle</button>
-    <button data-category="Racing">🏎️ Racing</button>
-    <button data-category="Adventure">🗺️ Adventure</button>
-    <button data-category="Sports">⚽ Sports</button>
-    <button data-category="Casual">🎯 Casual</button>
-  </nav>
-
-  <div class="game-grid" id="gameGrid"></div>
-  <p class="empty" id="empty" hidden>No games found.</p>
+<div class="game-grid" id="gameGrid"></div>
+<p class="empty" id="empty" hidden>No games found.</p>
 </section>
 
 <script>
-const $ = id => document.getElementById(id);
-const display = $("display");
+const $=id=>document.getElementById(id);
+const display=$("display");
+let expression="",code="",currentCategory="All",libraryOpen=false;
 
-let expression = "";
-let code = "";
-let currentCategory = "All";
-let libraryOpen = false;
+const buttons=["AC","(",")","÷","7","8","9","×","4","5","6","−","1","2","3","+","0",".","⌫","="];
 
-const buttons = [
-  "AC", "(", ")", "÷",
-  "7", "8", "9", "×",
-  "4", "5", "6", "−",
-  "1", "2", "3", "+",
-  "0", ".", "⌫", "="
-];
-
-buttons.forEach(key => {
-  const b = document.createElement("button");
-  b.textContent = key;
-
-  if ("÷×−+=".includes(key)) b.classList.add("op");
-
-  b.onclick = () => press(key, true);
-  $("keys").appendChild(b);
+buttons.forEach(key=>{
+ const b=document.createElement("button");
+ b.textContent=key;
+ if("÷×−+=".includes(key))b.classList.add("op");
+ b.onclick=()=>press(key,true);
+ $("keys").appendChild(b);
 });
 
-/* Exactly 25 white boxes */
-const sizes = [
-  "size-large", "size-normal", "size-normal",
-  "size-tall", "size-normal", "size-wide",
-  "size-normal", "size-normal", "size-large",
-  "size-normal", "size-tall", "size-normal",
-  "size-wide", "size-normal", "size-normal",
-  "size-normal", "size-large", "size-normal",
-  "size-tall", "size-normal", "size-wide",
-  "size-normal", "size-normal", "size-normal",
-  "size-large"
+/* 25 game-style cards with thumbnail images */
+const photos=[
+ "photo-1542751371-adc38448a05e",
+ "photo-1511512578047-dfb367046420",
+ "photo-1547394765-185e1e68f34e",
+ "photo-1493711662062-fa541adb3fc8",
+ "photo-1593305841991-05c297ba4575",
+ "photo-1542751371-adc38448a05e",
+ "photo-1519669556878-63bdad8a1a49",
+ "photo-1511512578047-dfb367046420",
+ "photo-1547394765-185e1e68f34e",
+ "photo-1493711662062-fa541adb3fc8",
+ "photo-1593305841991-05c297ba4575",
+ "photo-1542751371-adc38448a05e",
+ "photo-1519669556878-63bdad8a1a49",
+ "photo-1511512578047-dfb367046420",
+ "photo-1547394765-185e1e68f34e",
+ "photo-1493711662062-fa541adb3fc8",
+ "photo-1593305841991-05c297ba4575",
+ "photo-1542751371-adc38448a05e",
+ "photo-1519669556878-63bdad8a1a49",
+ "photo-1511512578047-dfb367046420",
+ "photo-1547394765-185e1e68f34e",
+ "photo-1493711662062-fa541adb3fc8",
+ "photo-1593305841991-05c297ba4575",
+ "photo-1542751371-adc38448a05e",
+ "photo-1519669556878-63bdad8a1a49"
 ];
 
-const games = Array.from({ length: 25 }, (_, i) => ({
-  name: `Game ${String(i + 1).padStart(2, "0")}`,
-  category: ["Action", "Arcade", "Puzzle", "Racing",
-             "Adventure", "Sports", "Casual"][i % 7],
-  size: sizes[i]
+const names=[
+ "Neon Arena","Pixel Quest","Turbo Rush","Block Master","Cyber Zone",
+ "Night Rider","Arcade Legends","Sky Runner","Drift City","Puzzle World",
+ "Digital Dreams","Space Explorer","Shadow Run","Retro Rush","Velocity",
+ "Crystal Quest","Pixel Planet","Storm Racing","Cyber Strike","Dream Island",
+ "Rocket League","Mystic Maze","Street Dash","Galaxy Jump","Final Level"
+];
+
+const categories=[
+ "Action","Arcade","Racing","Puzzle","Adventure",
+ "Racing","Arcade","Adventure","Racing","Puzzle",
+ "Action","Adventure","Action","Arcade","Racing",
+ "Puzzle","Adventure","Racing","Action","Casual",
+ "Sports","Puzzle","Racing","Casual","Adventure"
+];
+
+const sizes=[
+ "size-large","size-normal","size-normal","size-tall","size-normal",
+ "size-wide","size-normal","size-normal","size-large","size-normal",
+ "size-tall","size-normal","size-wide","size-normal","size-normal",
+ "size-normal","size-large","size-normal","size-tall","size-normal",
+ "size-wide","size-normal","size-normal","size-normal","size-large"
+];
+
+const games=names.map((name,i)=>({
+ name,
+ category:categories[i],
+ size:sizes[i],
+ image:`https://images.unsplash.com/${photos[i]}?auto=format&fit=crop&w=700&q=80`
 }));
 
-/* Calculator and secret code */
-function press(key, checkCode = false) {
-  if (checkCode && /^[0-9]$/.test(key)) {
-    code = (code + key).slice(-4);
+function press(key,checkCode=false){
+ if(checkCode&&/^[0-9]$/.test(key)){
+  code=(code+key).slice(-4);
+  if(code==="6767"){code="";openLibrary();return}
+ }else if(key!=="⌫"){code=""}
 
-    if (code === "6767") {
-      code = "";
-      openLibrary();
-      return;
-    }
-  } else if (key !== "⌫") {
-    code = "";
-  }
-
-  if (key === "AC") {
-    expression = "";
-  } else if (key === "⌫") {
-    expression = expression.slice(0, -1);
-  } else if (key === "=") {
-    try {
-      if (!expression ||
-          !/^[0-9+*/(). -]+$/.test(expression)) throw Error();
-
-      const result = Function(
-        '"use strict"; return (' + expression + ')'
-      )();
-
-      if (!Number.isFinite(result)) throw Error();
-      expression = String(result);
-    } catch {
-      expression = "";
-      display.value = "Error";
-      return;
-    }
-  } else {
-    expression += ({
-      "×": "*",
-      "÷": "/",
-      "−": "-"
-    })[key] || key;
-  }
-
-  display.value = expression
-    ? expression.replace(/\*/g, "×").replace(/\//g, "÷")
-    : "0";
+ if(key==="AC")expression="";
+ else if(key==="⌫")expression=expression.slice(0,-1);
+ else if(key==="="){
+  try{
+   if(!expression||!/^[0-9+*/(). -]+$/.test(expression))throw Error();
+   const result=Function('"use strict";return ('+expression+')')();
+   if(!Number.isFinite(result))throw Error();
+   expression=String(result);
+  }catch{expression="";display.value="Error";return}
+ }else{
+  expression+=({"×":"*","÷":"/","−":"-"}[key]||key);
+ }
+ display.value=expression?expression.replace(/\*/g,"×").replace(/\//g,"÷"):"0";
 }
 
-/* Physical keyboard code detection */
-document.addEventListener("keydown", e => {
-  if (libraryOpen) {
-    if (e.key === "Escape") closeLibrary();
-    return;
-  }
-
-  if (/^[0-9]$/.test(e.key)) {
-    code = (code + e.key).slice(-4);
-
-    if (code === "6767") {
-      code = "";
-      openLibrary();
-      return;
-    }
-
-    press(e.key, false);
-  } else if (e.key === "Backspace") {
-    code = "";
-    press("⌫");
-  } else if (e.key === "Enter") {
-    code = "";
-    press("=");
-  } else if (e.key === "Escape") {
-    code = "";
-    press("AC");
-  } else if ("+-*/().".includes(e.key)) {
-    code = "";
-    press(e.key);
-  }
+document.addEventListener("keydown",e=>{
+ if(libraryOpen){
+  if(e.key==="Escape")closeLibrary();
+  return;
+ }
+ if(/^[0-9]$/.test(e.key)){
+  code=(code+e.key).slice(-4);
+  if(code==="6767"){code="";openLibrary();return}
+  press(e.key,false);
+ }else if(e.key==="Backspace"){code="";press("⌫")}
+ else if(e.key==="Enter"){code="";press("=")}
+ else if(e.key==="Escape"){code="";press("AC")}
+ else if("+-*/().".includes(e.key)){code="";press(e.key)}
 });
 
-function openLibrary() {
-  libraryOpen = true;
-  $("calculator").style.display = "none";
-  $("library").style.display = "block";
-  renderGames();
+function openLibrary(){
+ libraryOpen=true;
+ $("calculator").style.display="none";
+ $("library").style.display="block";
+ renderGames();
+}
+function closeLibrary(){
+ libraryOpen=false;
+ $("library").style.display="none";
+ $("calculator").style.display="block";
+ expression="";
+ code="";
+ display.value="0";
+}
+$("exit").onclick=closeLibrary;
+
+function renderGames(){
+ const query=$("search").value.toLowerCase().trim();
+ const grid=$("gameGrid");
+ grid.replaceChildren();
+
+ const filtered=games.filter(g=>
+  (currentCategory==="All"||g.category===currentCategory)&&
+  g.name.toLowerCase().includes(query)
+ );
+
+ filtered.forEach(g=>{
+  const card=document.createElement("article");
+  card.className="game-card "+g.size;
+
+  const img=document.createElement("img");
+  img.src=g.image;
+  img.alt=g.name+" thumbnail";
+  img.loading="lazy";
+  img.onerror=()=>{img.style.display="none";card.style.background="#29334a"};
+
+  const info=document.createElement("div");
+  info.className="game-info";
+  info.append(document.createTextNode(g.name));
+
+  const small=document.createElement("small");
+  small.textContent=g.category;
+  info.appendChild(small);
+
+  card.append(img,info);
+  grid.appendChild(card);
+ });
+
+ $("empty").hidden=filtered.length>0;
 }
 
-function closeLibrary() {
-  libraryOpen = false;
-  $("library").style.display = "none";
-  $("calculator").style.display = "block";
-  expression = "";
-  code = "";
-  display.value = "0";
-}
+$("search").addEventListener("input",renderGames);
 
-$("exit").onclick = closeLibrary;
-
-/* Search and category filters */
-function renderGames() {
-  const query = $("search").value.toLowerCase().trim();
-  const grid = $("gameGrid");
-  grid.replaceChildren();
-
-  const filtered = games.filter(g =>
-    (currentCategory === "All" ||
-     g.category === currentCategory) &&
-    g.name.toLowerCase().includes(query)
-  );
-
-  filtered.forEach(g => {
-    const card = document.createElement("article");
-    card.className = `game-card ${g.size}`;
-    card.title = g.name;
-    card.setAttribute("aria-label", g.name);
-    grid.appendChild(card);
-  });
-
-  $("empty").hidden = filtered.length > 0;
-}
-
-$("search").addEventListener("input", renderGames);
-
-$("categories").addEventListener("click", e => {
-  const button = e.target.closest("button[data-category]");
-  if (!button) return;
-
-  currentCategory = button.dataset.category;
-
-  document.querySelectorAll("#categories button").forEach(b =>
-    b.classList.toggle("active", b === button)
-  );
-
-  renderGames();
+$("categories").addEventListener("click",e=>{
+ const button=e.target.closest("button[data-category]");
+ if(!button)return;
+ currentCategory=button.dataset.category;
+ document.querySelectorAll("#categories button").forEach(b=>
+  b.classList.toggle("active",b===button)
+ );
+ renderGames();
 });
 </script>
-
 </body>
 </html>
