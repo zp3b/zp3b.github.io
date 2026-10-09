@@ -48,12 +48,24 @@ button:hover { background: #3b4e68; }
          aria-label="Calculator display">
   <div class="keys" id="keys"></div>
 
-  <section id="secret">
-    <h3>Secret menu unlocked!</h3>
-    <p>Welcome to the hidden CalcX settings.</p>
-    <button onclick="changeTheme()">Change theme</button>
-    <button onclick="hideSecret()">Close menu</button>
-  </section>
+
+<section id="secret" class="library">
+  <header class="topbar">
+    <h2>GameZone</h2>
+    <input id="search" placeholder="Search games...">
+    <button onclick="hideSecret()">Exit</button>
+  </header>
+
+  <nav class="categories">
+    <button onclick="filterGames('All')">✨ All</button>
+    <button onclick="filterGames('Arcade')">🎮 Arcade</button>
+    <button onclick="filterGames('Puzzle')">🧩 Puzzle</button>
+    <button onclick="filterGames('Racing')">🏎️ Racing</button>
+    <button onclick="filterGames('Adventure')">🗺️ Adventure</button>
+  </nav>
+
+  <div id="gameGrid" class="game-grid"></div>
+</section>
 </main>
 
 <script>
