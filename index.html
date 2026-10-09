@@ -1,277 +1,272 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CalcX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090a0e;color:white;font-family:Arial,sans-serif}
-.calculator{width:min(350px,94vw);padding:24px;background:#141721;border:1px solid #292b34;border-radius:24px;box-shadow:0 25px 80px #0008}
-.calculator h2{color:#67e8f9}
-#display{width:100%;padding:20px 12px;margin-bottom:14px;border:1px solid #252b39;border-radius:14px;background:#090c13;color:white;font-size:28px;text-align:right}
+body{
+  margin:0;background:#080b12;color:white;
+  font-family:Arial,sans-serif
+}
+button,input{font:inherit}
+#calculator{
+  width:min(340px,94vw);margin:55px auto;
+  padding:20px;background:#171b26;
+  border-radius:22px;box-shadow:0 15px 50px #0008
+}
+#display{
+  width:100%;height:75px;border:0;border-radius:12px;
+  background:#0a0d14;color:white;text-align:right;
+  padding:15px;font-size:30px;margin-bottom:14px
+}
 .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-button{padding:13px 10px;border:1px solid #343744;border-radius:12px;background:#282c39;color:white;font-size:15px;cursor:pointer}
-button:hover{filter:brightness(1.2)}
-.op{background:#087e99}
-
-/* Full-screen library */
-.library{display:none;position:fixed;inset:0;z-index:9999;overflow:auto;background:#17171c;color:white;padding:16px}
-.topbar{display:flex;align-items:center;gap:14px;padding:12px 16px;background:#222227;border:1px solid #34343b;border-radius:15px}
-.brand{font-size:21px;font-weight:800;white-space:nowrap}
-.search-wrap{flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;border:1px solid #666873;border-radius:30px;background:#1b1b20}
-.search-wrap span{font-size:20px;color:#9ba0af}
-.topbar input{width:100%;min-width:0;padding:13px 0;border:0;outline:0;background:transparent;color:white;font-size:14px}
-.topbar input::placeholder{color:#9296a6}
-.exit{background:#3985ff;border:0;font-weight:bold;padding:13px 22px}
-.categories{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
-.categories button{padding:10px 15px;border:1px solid #393a44;border-radius:25px;background:#292a32;color:#eee;white-space:nowrap}
-.categories button.active{background:#087e99;border-color:#087e99}
-
-/* 25 image tiles */
-.game-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:clamp(48px,5vw,78px);grid-auto-flow:dense;gap:12px}
-.game-card{position:relative;min-width:0;min-height:0;overflow:hidden;border-radius:13px;background:#20232d;cursor:pointer;isolation:isolate;transition:transform .18s,box-shadow .18s}
-.game-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px #0008}
-.game-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .3s}
-.game-card:hover img{transform:scale(1.06)}
-.game-card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#000d,transparent 75%)}
-.game-info{position:absolute;bottom:0;left:0;right:0;padding:12px 10px;color:white;font-weight:800;font-size:14px;text-shadow:0 2px 5px #000}
-.game-info small{display:block;margin-top:4px;color:#ddd;font-weight:normal;font-size:11px}
-.size-normal{grid-column:span 2;grid-row:span 2}
-.size-wide{grid-column:span 4;grid-row:span 2}
-.size-tall{grid-column:span 2;grid-row:span 4}
-.size-large{grid-column:span 4;grid-row:span 4}
-.empty{text-align:center;padding:30px;color:#aaa}
-
-@media(min-width:1200px){
- .game-grid{grid-auto-rows:4.2vw}
+.keys button{
+  height:59px;border:0;border-radius:12px;
+  background:#292f40;color:white;cursor:pointer;font-size:20px
 }
-@media(max-width:800px){
- .library{padding:10px}
- .topbar{flex-wrap:wrap}
- .brand{flex:1}
- .search-wrap{order:3;flex-basis:100%}
- .game-grid{grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:55px;gap:8px}
- .size-normal{grid-column:span 2;grid-row:span 2}
- .size-wide{grid-column:span 4;grid-row:span 2}
- .size-tall{grid-column:span 2;grid-row:span 4}
- .size-large{grid-column:span 4;grid-row:span 4}
+.keys button:hover{background:#414b64}
+.keys .operator{background:#5269e8}
+.keys .clear{background:#b84459}
+#library{display:none;padding:22px;min-height:100vh}
+header{display:flex;gap:15px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+header h1{margin:0;font-size:28px}
+#search{
+  flex:1;min-width:180px;padding:13px 16px;
+  border-radius:12px;border:1px solid #343b4d;
+  background:#141a27;color:white
 }
-@media(max-width:420px){
- .game-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:52px}
- .game-info{font-size:12px;padding:8px}
+#categories{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+#categories button{
+  border:1px solid #343b4d;background:#171d2b;
+  color:#ddd;padding:10px 15px;border-radius:20px;cursor:pointer
+}
+#categories button.active{background:#536cf0;color:white}
+#games{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:18px
+}
+.game{
+  overflow:hidden;background:#141a27;border:1px solid #252d40;
+  border-radius:15px;cursor:pointer;transition:.18s
+}
+.game:hover{transform:translateY(-4px);border-color:#647cff}
+.game img{width:100%;height:125px;object-fit:cover;display:block}
+.game h3{margin:12px 12px 5px;font-size:17px}
+.game p{margin:0 12px 14px;color:#9ba6bd;font-size:13px}
+#viewer{
+  display:none;position:fixed;inset:0;z-index:5;background:#080b12;
+  flex-direction:column
+}
+#viewerbar{
+  height:58px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 15px;background:#151b28
+}
+#viewerbar button{
+  border:0;background:#536cf0;color:white;border-radius:9px;
+  padding:10px 15px;cursor:pointer
+}
+#gameframe{flex:1;width:100%;border:0;background:#fff}
+#empty{display:none;color:#9ba6bd;padding:25px}
+@media(max-width:480px){
+  #library{padding:14px}
+  #games{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .game img{height:100px}
+  .game h3{font-size:14px}
 }
 </style>
 </head>
 
 <body>
+<section id="calculator">
+  <input id="display" value="0" readonly aria-label="Calculator display">
+  <div class="keys">
+    <button class="clear" onclick="clearCalc()">AC</button>
+    <button onclick="press('(')">(</button>
+    <button onclick="press(')')">)</button>
+    <button class="operator" onclick="press('/')">÷</button>
 
-<main class="calculator" id="calculator">
-<h2>CalcX</h2>
-<input id="display" value="0" readonly aria-label="Calculator display">
-<div class="keys" id="keys"></div>
-</main>
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button class="operator" onclick="press('*')">×</button>
 
-<section class="library" id="library">
-<header class="topbar">
-<div class="brand">✦ GameZone</div>
-<div class="search-wrap">
-<span>⌕</span>
-<input id="search" placeholder="Search games..." aria-label="Search games">
-</div>
-<button class="exit" id="exit">Exit</button>
-</header>
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button class="operator" onclick="press('-')">−</button>
 
-<nav class="categories" id="categories">
-<button class="active" data-category="All">✨ All</button>
-<button data-category="Action">💥 Action</button>
-<button data-category="Arcade">🕹️ Arcade</button>
-<button data-category="Puzzle">🧩 Puzzle</button>
-<button data-category="Racing">🏎️ Racing</button>
-<button data-category="Adventure">🗺️ Adventure</button>
-<button data-category="Sports">⚽ Sports</button>
-<button data-category="Casual">🎯 Casual</button>
-</nav>
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button class="operator" onclick="press('+')">+</button>
 
-<div class="game-grid" id="gameGrid"></div>
-<p class="empty" id="empty" hidden>No games found.</p>
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="backspace()">⌫</button>
+    <button class="operator" onclick="calculate()">=</button>
+  </div>
+</section>
+
+<section id="library">
+  <header>
+    <h1>Game Library</h1>
+    <input id="search" placeholder="Search games..." oninput="renderGames()">
+    <button onclick="closeLibrary()" style="padding:11px;border:0;border-radius:9px;cursor:pointer">Close</button>
+  </header>
+
+  <nav id="categories">
+    <button class="active" onclick="setCategory('All',this)">All</button>
+    <button onclick="setCategory('Arcade',this)">Arcade</button>
+    <button onclick="setCategory('Puzzle',this)">Puzzle</button>
+    <button onclick="setCategory('Racing',this)">Racing</button>
+    <button onclick="setCategory('Strategy',this)">Strategy</button>
+  </nav>
+
+  <div id="games"></div>
+  <p id="empty">No games match your search.</p>
+</section>
+
+<section id="viewer">
+  <div id="viewerbar">
+    <strong id="gameTitle">Game</strong>
+    <button onclick="closeViewer()">Close game ✕</button>
+  </div>
+  <iframe id="gameframe" title="Game viewer"
+    sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"
+    allowfullscreen></iframe>
 </section>
 
 <script>
-const $=id=>document.getElementById(id);
-const display=$("display");
-let expression="",code="",currentCategory="All",libraryOpen=false;
+const display = document.getElementById('display');
+let expression = '';
+let category = 'All';
 
-const buttons=["AC","(",")","÷","7","8","9","×","4","5","6","−","1","2","3","+","0",".","⌫","="];
-
-buttons.forEach(key=>{
- const b=document.createElement("button");
- b.textContent=key;
- if("÷×−+=".includes(key))b.classList.add("op");
- b.onclick=()=>press(key,true);
- $("keys").appendChild(b);
-});
-
-/* 25 game-style cards with thumbnail images */
-const photos=[
- "photo-1542751371-adc38448a05e",
- "photo-1511512578047-dfb367046420",
- "photo-1547394765-185e1e68f34e",
- "photo-1493711662062-fa541adb3fc8",
- "photo-1593305841991-05c297ba4575",
- "photo-1542751371-adc38448a05e",
- "photo-1519669556878-63bdad8a1a49",
- "photo-1511512578047-dfb367046420",
- "photo-1547394765-185e1e68f34e",
- "photo-1493711662062-fa541adb3fc8",
- "photo-1593305841991-05c297ba4575",
- "photo-1542751371-adc38448a05e",
- "photo-1519669556878-63bdad8a1a49",
- "photo-1511512578047-dfb367046420",
- "photo-1547394765-185e1e68f34e",
- "photo-1493711662062-fa541adb3fc8",
- "photo-1593305841991-05c297ba4575",
- "photo-1542751371-adc38448a05e",
- "photo-1519669556878-63bdad8a1a49",
- "photo-1511512578047-dfb367046420",
- "photo-1547394765-185e1e68f34e",
- "photo-1493711662062-fa541adb3fc8",
- "photo-1593305841991-05c297ba4575",
- "photo-1542751371-adc38448a05e",
- "photo-1519669556878-63bdad8a1a49"
-];
-
-const names=[
- "Neon Arena","Pixel Quest","Turbo Rush","Block Master","Cyber Zone",
- "Night Rider","Arcade Legends","Sky Runner","Drift City","Puzzle World",
- "Digital Dreams","Space Explorer","Shadow Run","Retro Rush","Velocity",
- "Crystal Quest","Pixel Planet","Storm Racing","Cyber Strike","Dream Island",
- "Rocket League","Mystic Maze","Street Dash","Galaxy Jump","Final Level"
-];
-
-const categories=[
- "Action","Arcade","Racing","Puzzle","Adventure",
- "Racing","Arcade","Adventure","Racing","Puzzle",
- "Action","Adventure","Action","Arcade","Racing",
- "Puzzle","Adventure","Racing","Action","Casual",
- "Sports","Puzzle","Racing","Casual","Adventure"
-];
-
-const sizes=[
- "size-large","size-normal","size-normal","size-tall","size-normal",
- "size-wide","size-normal","size-normal","size-large","size-normal",
- "size-tall","size-normal","size-wide","size-normal","size-normal",
- "size-normal","size-large","size-normal","size-tall","size-normal",
- "size-wide","size-normal","size-normal","size-normal","size-large"
-];
-
-const games=names.map((name,i)=>({
- name,
- category:categories[i],
- size:sizes[i],
- image:`https://images.unsplash.com/${photos[i]}?auto=format&fit=crop&w=700&q=80`
-}));
-
-function press(key,checkCode=false){
- if(checkCode&&/^[0-9]$/.test(key)){
-  code=(code+key).slice(-4);
-  if(code==="6767"){code="";openLibrary();return}
- }else if(key!=="⌫"){code=""}
-
- if(key==="AC")expression="";
- else if(key==="⌫")expression=expression.slice(0,-1);
- else if(key==="="){
+function press(value){
+  if(display.value === 'Error') clearCalc();
+  expression += value;
+  display.value = expression || '0';
+}
+function clearCalc(){
+  expression = '';
+  display.value = '0';
+}
+function backspace(){
+  expression = expression.slice(0,-1);
+  display.value = expression || '0';
+}
+function calculate(){
+  if(expression === '6767'){
+    clearCalc();
+    document.getElementById('calculator').style.display = 'none';
+    document.getElementById('library').style.display = 'block';
+    return;
+  }
+  if(!expression) return;
+  if(!/^[0-9+\-*/(). ]+$/.test(expression)){
+    display.value = 'Error'; expression = ''; return;
+  }
   try{
-   if(!expression||!/^[0-9+*/(). -]+$/.test(expression))throw Error();
-   const result=Function('"use strict";return ('+expression+')')();
-   if(!Number.isFinite(result))throw Error();
-   expression=String(result);
-  }catch{expression="";display.value="Error";return}
- }else{
-  expression+=({"×":"*","÷":"/","−":"-"}[key]||key);
- }
- display.value=expression?expression.replace(/\*/g,"×").replace(/\//g,"÷"):"0";
+    const result = Function('"use strict";return ('+expression+')')();
+    if(!Number.isFinite(result)) throw new Error();
+    expression = String(result);
+    display.value = expression;
+  }catch{
+    expression = '';
+    display.value = 'Error';
+  }
 }
-
-document.addEventListener("keydown",e=>{
- if(libraryOpen){
-  if(e.key==="Escape")closeLibrary();
-  return;
- }
- if(/^[0-9]$/.test(e.key)){
-  code=(code+e.key).slice(-4);
-  if(code==="6767"){code="";openLibrary();return}
-  press(e.key,false);
- }else if(e.key==="Backspace"){code="";press("⌫")}
- else if(e.key==="Enter"){code="";press("=")}
- else if(e.key==="Escape"){code="";press("AC")}
- else if("+-*/().".includes(e.key)){code="";press(e.key)}
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('library').style.display === 'block'){
+    if(e.key === 'Escape') closeViewer();
+    return;
+  }
+  if(/^[0-9.+\-*/()]$/.test(e.key)) press(e.key);
+  else if(e.key === 'Enter') calculate();
+  else if(e.key === 'Backspace') backspace();
+  else if(e.key === 'Escape') clearCalc();
 });
 
-function openLibrary(){
- libraryOpen=true;
- $("calculator").style.display="none";
- $("library").style.display="block";
- renderGames();
-}
-function closeLibrary(){
- libraryOpen=false;
- $("library").style.display="none";
- $("calculator").style.display="block";
- expression="";
- code="";
- display.value="0";
-}
-$("exit").onclick=closeLibrary;
+const games = [
+ ['Neon Dash','Arcade','A colourful, fast-paced challenge.','https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600'],
+ ['Pixel Worlds','Arcade','Explore a retro-inspired world.','https://images.unsplash.com/photo-1614294149010-950b698f72c0?w=600'],
+ ['Turbo Circuit','Racing','Race around futuristic tracks.','https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600'],
+ ['Brain Blocks','Puzzle','Solve clever block puzzles.','https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=600'],
+ ['Star Explorer','Arcade','Discover the stars.','https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600'],
+ ['Speedway','Racing','Put your driving skills to the test.','https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=600'],
+ ['Mind Maze','Puzzle','Find your way through the maze.','https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600'],
+ ['Castle Tactics','Strategy','Plan your next move.','https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600'],
+ ['Cyber City','Arcade','A glowing neon city awaits.','https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=600'],
+ ['Drift Legends','Racing','Master every corner.','https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600'],
+ ['Number Quest','Puzzle','Test your number skills.','https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600'],
+ ['Space Tactics','Strategy','Make smart moves among the stars.','https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600'],
+ ['Retro Arcade','Arcade','Classic arcade-inspired fun.','https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600'],
+ ['Ocean Puzzle','Puzzle','Explore a blue underwater world.','https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600'],
+ ['Mountain Run','Racing','Take on the mountain roads.','https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600'],
+ ['Kingdom Plan','Strategy','Build your strategy carefully.','https://images.unsplash.com/photo-1518709594023-6eab9bab7b23?w=600'],
+ ['Pixel Runner','Arcade','Keep moving and beat your best.','https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=600'],
+ ['Circuit Rush','Racing','A new circuit challenge.','https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600'],
+ ['Shape Shift','Puzzle','Match shapes and patterns.','https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600'],
+ ['Galaxy Quest','Arcade','Journey beyond the horizon.','https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600'],
+ ['Tower Tactics','Strategy','Protect your tower with a plan.','https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=600'],
+ ['Sunset Drive','Racing','Cruise into the sunset.','https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600'],
+ ['Logic Lab','Puzzle','Put your logic to work.','https://images.unsplash.com/photo-1518770660439-4636190af475?w=600'],
+ ['Pixel Planet','Arcade','A tiny retro universe.','https://images.unsplash.com/photo-1614294149010-950b698f72c0?w=600'],
+ ['Final Strategy','Strategy','Think ahead and make a plan.','https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600']
+];
 
 function renderGames(){
- const query=$("search").value.toLowerCase().trim();
- const grid=$("gameGrid");
- grid.replaceChildren();
+  const term = document.getElementById('search').value.toLowerCase();
+  const container = document.getElementById('games');
+  container.innerHTML = '';
+  let count = 0;
 
- const filtered=games.filter(g=>
-  (currentCategory==="All"||g.category===currentCategory)&&
-  g.name.toLowerCase().includes(query)
- );
+  games.forEach((game,index)=>{
+    if(category !== 'All' && game[1] !== category) return;
+    if(!(game[0]+' '+game[1]+' '+game[2]).toLowerCase().includes(term)) return;
 
- filtered.forEach(g=>{
-  const card=document.createElement("article");
-  card.className="game-card "+g.size;
-
-  const img=document.createElement("img");
-  img.src=g.image;
-  img.alt=g.name+" thumbnail";
-  img.loading="lazy";
-  img.onerror=()=>{img.style.display="none";card.style.background="#29334a"};
-
-  const info=document.createElement("div");
-  info.className="game-info";
-  info.append(document.createTextNode(g.name));
-
-  const small=document.createElement("small");
-  small.textContent=g.category;
-  info.appendChild(small);
-
-  card.append(img,info);
-  grid.appendChild(card);
- });
-
- $("empty").hidden=filtered.length>0;
+    count++;
+    const card = document.createElement('article');
+    card.className = 'game';
+    card.innerHTML = `
+      <img src="${game[3]}" alt="" loading="lazy">
+      <h3>${game[0]}</h3>
+      <p>${game[1]} · Demo card</p>
+    `;
+    card.addEventListener('click',()=>openGame(index));
+    container.appendChild(card);
+  });
+  document.getElementById('empty').style.display = count ? 'none' : 'block';
 }
-
-$("search").addEventListener("input",renderGames);
-
-$("categories").addEventListener("click",e=>{
- const button=e.target.closest("button[data-category]");
- if(!button)return;
- currentCategory=button.dataset.category;
- document.querySelectorAll("#categories button").forEach(b=>
-  b.classList.toggle("active",b===button)
- );
- renderGames();
-});
+function setCategory(value,button){
+  category = value;
+  document.querySelectorAll('#categories button').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  renderGames();
+}
+function openGame(index){
+  const game = games[index];
+  document.getElementById('gameTitle').textContent = game[0];
+  const frame = document.getElementById('gameframe');
+  frame.removeAttribute('srcdoc');
+  frame.src = 'about:blank';
+  document.getElementById('viewer').style.display = 'flex';
+}
+function closeViewer(){
+  document.getElementById('viewer').style.display = 'none';
+  document.getElementById('gameframe').src = 'about:blank';
+}
+function closeLibrary(){
+  closeViewer();
+  document.getElementById('library').style.display = 'none';
+  document.getElementById('calculator').style.display = 'block';
+  clearCalc();
+}
+renderGames();
 </script>
 </body>
 </html>
+```
