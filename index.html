@@ -5,148 +5,244 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ScriptForge | Roblox scripts you can drop in and edit</title>
 <meta name="description" content="ScriptForge sells Luau scripts, systems and UI kits for Roblox developers.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFCB05'/%3E%3Ctext x='16' y='23' font-family='Arial Black,Arial,sans-serif' font-size='18' font-weight='900' text-anchor='middle' fill='%2312161A'%3ESF%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#05080F">
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#12161A;
-    --paper:#F1F3F5;
-    --steel:#5A6671;
-    --rule:#C9D0D6;
-    --yellow:#FFCB05;
-    --code-text:#E6EBEF;
-    --code-dim:#7C8892;
-    --code-str:#8FD1C2;
+    --space:#05080F;
+    --mist:#DCE8FF;
+    --sky:#8FB0FF;
+    --deep:#5B86F0;
+    --dim:#9DAACB;
+    --rule:#243152;
+    --panel:#0A1228;
+    --grad:#5B86F0;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{
+    scroll-behavior:smooth;min-height:100%;
+    background:#070D20;
+  }
   body{
-    margin:0;background:var(--paper);color:var(--ink);
+    margin:0;position:relative;color:var(--mist);
     font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     font-stretch:100%;font-size:17px;line-height:1.6;
-    border-top:8px solid var(--yellow);
   }
-  ::selection{background:var(--yellow);color:var(--ink)}
+  /* faint star field behind everything */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      radial-gradient(1.2px 1.2px at 40px 60px,rgba(255,255,255,.55),transparent),
+      radial-gradient(1px 1px at 150px 120px,rgba(255,255,255,.4),transparent),
+      radial-gradient(1.4px 1.4px at 230px 30px,rgba(220,232,255,.5),transparent),
+      radial-gradient(1px 1px at 90px 200px,rgba(255,255,255,.35),transparent);
+    background-size:260px 240px,340px 300px,420px 380px,310px 280px;
+  }
+  /* the star background: the logo's own sky (with the f taken out) fading into the page */
+  .sky{
+    position:absolute;top:0;left:0;right:0;height:860px;z-index:-1;pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(5,8,15,.8) 0%,rgba(5,8,15,.4) 55%,rgba(5,8,15,.15) 100%),
+      url("bg.jpg") center 60% / cover no-repeat;
+    -webkit-mask-image:linear-gradient(#000 55%,transparent 100%);
+    mask-image:linear-gradient(#000 55%,transparent 100%);
+  }
+  .hero>div{min-width:0}
+  ::selection{background:var(--sky);color:var(--space)}
   a{color:inherit}
-  :focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 6px var(--yellow)}
+  :focus-visible{outline:3px solid var(--mist);outline-offset:3px}
   .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .topline{height:6px;background:var(--grad)}
 
   /* top bar */
-  .bar{display:flex;justify-content:space-between;align-items:baseline;padding:26px 0}
-  .brand{font-stretch:125%;font-weight:800;font-size:1.25rem;letter-spacing:-.01em;text-decoration:none}
-  .bar nav{display:flex;gap:28px}
-  .bar nav a{text-decoration:none;font-size:.98rem}
-  .bar nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-decoration-color:var(--yellow);text-underline-offset:6px}
+  .bar{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+  .brand{display:flex;align-items:center;gap:12px;font-stretch:125%;font-weight:800;font-size:1.25rem;letter-spacing:-.01em;text-decoration:none}
+  .brand img{width:44px;height:44px;border-radius:50%;display:block;object-fit:cover;box-shadow:0 0 0 2px rgba(220,232,255,.6)}
+  .bar nav{display:flex;gap:28px;align-items:center}
+  .bar nav a,.bar nav button{
+    background:none;border:0;padding:0;font:inherit;font-size:.98rem;color:var(--mist);cursor:pointer;text-decoration:none;
+  }
+  .bar nav a:hover,.bar nav button:hover{text-decoration:underline;text-decoration-thickness:3px;text-decoration-color:var(--sky);text-underline-offset:6px}
 
   /* hero */
-  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;padding:56px 0 96px}
+  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:60px;align-items:center;padding:56px 0 100px}
   h1{
     font-stretch:125%;font-weight:800;line-height:.98;letter-spacing:-.035em;
-    font-size:clamp(2.6rem,6.2vw,5rem);margin:0 0 26px;
+    font-size:clamp(2.6rem,6.2vw,5rem);margin:0 0 26px;padding-bottom:.08em;
+    color:#fff;
   }
-  .hero p{max-width:30em;margin:0 0 30px;color:var(--steel);font-size:1.12rem}
+  .hero p{max-width:30em;margin:0 0 30px;color:var(--dim);font-size:1.12rem}
   .hero-links{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
   .btn{
-    display:inline-block;background:var(--yellow);color:var(--ink);font-weight:700;
-    padding:13px 22px;border-radius:4px;text-decoration:none;border:0;cursor:pointer;
+    display:inline-block;background:var(--grad);color:#07102A;
+    padding:13px 22px;border-radius:5px;text-decoration:none;border:0;cursor:pointer;
     font:inherit;font-weight:700;
   }
-  .btn:hover{background:var(--ink);color:var(--yellow)}
+  .btn:hover{filter:brightness(1.1)}
+  .btn[disabled]{opacity:.6;cursor:default}
   .textlink{font-weight:600;text-underline-offset:5px;text-decoration-thickness:2px}
 
+  .codewrap{position:relative}
+  .codewrap::before{content:"";position:absolute;inset:16px -16px -16px 16px;background:var(--grad);border-radius:6px}
   .code{
-    background:var(--ink);color:var(--code-text);border-radius:6px;padding:26px 28px;
+    position:relative;background:#070C1A;color:#E3EBFF;border:1px solid var(--rule);border-radius:6px;padding:26px 28px;
     font:14.5px/1.7 ui-monospace,"Cascadia Mono",Consolas,"SF Mono",Menlo,monospace;
     overflow-x:auto;margin:0;tab-size:4;
-    box-shadow:14px 14px 0 var(--yellow);
   }
-  .code .k{color:var(--yellow)}
-  .code .s{color:var(--code-str)}
-  .code .c{color:var(--code-dim)}
-  .file{font:13px/1 ui-monospace,Consolas,monospace;color:var(--steel);margin:0 0 12px 2px}
+  .code .k{color:var(--sky)}
+  .code .s{color:#A9E3D3}
+  .code .c{color:#6F7FA3}
+  .file{font:13px/1 ui-monospace,Consolas,monospace;color:var(--dim);margin:0 0 12px 2px}
 
   /* sections */
-  section{padding:0 0 88px}
+  section{padding:0 0 96px}
   h2{font-stretch:112%;font-weight:800;font-size:2rem;letter-spacing:-.02em;line-height:1.1;margin:0 0 10px}
-  .lead{margin:0 0 30px;color:var(--steel);max-width:36em}
+  .lead{margin:0 0 30px;color:var(--dim);max-width:36em}
 
-  /* catalogue */
-  .filters{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;border-bottom:2px solid var(--ink);padding-bottom:12px}
+  /* shop */
+  .shophead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+  .shophead h2{margin:0}
+  .shophead .lead{margin:0}
+  .filters{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;border-bottom:2px solid var(--mist);padding-bottom:12px}
   .filters button{
-    background:none;border:0;padding:0;font:inherit;font-size:.98rem;color:var(--steel);cursor:pointer;
+    background:none;border:0;padding:0;font:inherit;font-size:.98rem;color:var(--dim);cursor:pointer;
     text-underline-offset:7px;text-decoration-thickness:3px;
   }
-  .filters button:hover{color:var(--ink)}
-  .filters button[aria-pressed="true"]{color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-color:var(--yellow)}
+  .filters button:hover{color:var(--mist)}
+  .filters button[aria-pressed="true"]{color:#fff;font-weight:700;text-decoration:underline;text-decoration-color:var(--sky)}
   .filters input{
     margin-left:auto;border:0;border-bottom:2px solid var(--rule);background:transparent;font:inherit;font-size:.98rem;
-    padding:2px 0;min-width:220px;color:var(--ink);border-radius:0;
+    padding:2px 0;min-width:220px;color:var(--mist);border-radius:0;
   }
-  .filters input:focus{outline:none;border-bottom-color:var(--ink)}
+  .filters input::placeholder{color:var(--dim)}
+  .filters input:focus{outline:none;border-bottom-color:var(--sky)}
 
   details.item{border-bottom:1px solid var(--rule)}
   details.item summary{
     list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) 90px 28px;
-    gap:20px;align-items:baseline;padding:22px 8px 22px 14px;border-left:6px solid transparent;
+    gap:20px;align-items:baseline;padding:26px 8px 26px 18px;
   }
   details.item summary::-webkit-details-marker{display:none}
-  details.item summary:hover{border-left-color:var(--yellow);background:rgba(18,22,26,.035)}
-  details.item[open] summary{border-left-color:var(--ink)}
-  .name{font-weight:700;font-size:1.12rem}
-  .blurb{color:var(--steel);font-size:.98rem}
+  details.item summary:hover{box-shadow:inset 6px 0 0 var(--sky);background:rgba(143,176,255,.06)}
+  details.item[open] summary{box-shadow:inset 6px 0 0 var(--mist)}
+  .name{font-weight:700;font-size:1.15rem;color:#fff}
+  .blurb{color:var(--dim);font-size:.98rem}
   .price{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+  .mark{text-align:right}
   .mark::before{content:"+";font-size:1.4rem;line-height:1;font-weight:400}
   details[open] .mark::before{content:"\2212"}
-  .mark{text-align:right}
-  .more{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr);gap:20px;padding:4px 36px 30px 20px}
-  .more p{margin:0;max-width:34em}
-  .more ul{margin:0 0 20px;padding-left:1.1em}
+  .more{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr);gap:20px;padding:4px 36px 32px 24px}
+  .more p{margin:0;max-width:34em;color:var(--mist)}
+  .more ul{margin:0 0 20px;padding-left:1.1em;color:var(--dim)}
   .more li{margin-bottom:4px}
-  .cat{color:var(--steel);font-size:.9rem;margin:0 0 4px}
-  .nomatch{display:none;padding:26px 14px;color:var(--steel)}
+  .cat{color:var(--dim);font-size:.9rem;margin:0 0 10px !important}
+  .nomatch{display:none;padding:26px 14px;color:var(--dim)}
+  .showmore{
+    display:block;margin:30px auto 0;background:none;color:var(--mist);border:1px solid var(--rule);
+    border-radius:5px;padding:12px 26px;font:inherit;font-weight:600;cursor:pointer;
+  }
+  .showmore:hover{border-color:var(--sky)}
+  .showmore[hidden]{display:none}
 
   /* faq */
   .faq{display:grid;grid-template-columns:1fr 1fr;gap:36px 56px}
-  .faq h3{margin:0 0 6px;font-size:1.05rem}
-  .faq p{margin:0;color:var(--steel)}
+  .faq h3{margin:0 0 6px;font-size:1.05rem;color:#fff}
+  .faq p{margin:0;color:var(--dim)}
 
   /* contact */
-  .contact{background:var(--yellow);padding:44px 40px;border-radius:6px}
+  .contact{background:var(--grad);color:#07102A;padding:46px 42px;border-radius:8px}
   .contact h2{margin-bottom:12px}
-  .contact p{margin:0 0 22px;max-width:32em}
-  .contact .links{display:flex;gap:26px;flex-wrap:wrap}
-  .contact a{font-weight:700;text-underline-offset:5px;text-decoration-thickness:3px}
+  .contact p{margin:0 0 24px;max-width:34em}
+  .contact .links{display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+  .contact a,.contact .linkbtn{
+    font:inherit;font-weight:700;color:#07102A;text-underline-offset:5px;text-decoration-thickness:3px;
+    background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;
+  }
+  :focus-visible.contact-focus{outline-color:#07102A}
+  .contact :focus-visible{outline-color:#07102A}
 
-  footer{border-top:1px solid var(--rule);padding:28px 0 44px;color:var(--steel);font-size:.88rem}
+  footer{border-top:1px solid var(--rule);padding:28px 0 48px;color:var(--dim);font-size:.88rem}
+  footer .wrap{display:flex;gap:16px;align-items:flex-start}
+  footer img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px rgba(220,232,255,.5)}
   footer p{margin:0;max-width:52em}
 
+  /* suggestion tab */
+  .tab{
+    position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:20;
+    writing-mode:vertical-rl;background:var(--grad);color:#07102A;border:0;cursor:pointer;
+    font:inherit;font-weight:700;font-size:.95rem;padding:18px 11px;border-radius:8px 0 0 8px;
+    box-shadow:0 0 0 1px rgba(5,8,15,.4);
+  }
+  .tab:hover{filter:brightness(1.1);padding-right:15px}
+
+  dialog{
+    border:0;padding:0;background:transparent;color:var(--mist);
+    width:calc(100% - 32px);max-width:520px;
+  }
+  dialog::backdrop{background:rgba(3,6,14,.75);backdrop-filter:blur(3px)}
+  .sheet{background:var(--panel);border:1px solid #2F4070;border-radius:10px;padding:28px;position:relative;overflow:hidden}
+  .sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--grad)}
+  .sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .sheet h2{font-size:1.5rem;margin:0}
+  .x{background:none;border:0;color:var(--dim);font-size:1.8rem;line-height:1;cursor:pointer;padding:0 4px}
+  .x:hover{color:#fff}
+  .sg-lead{margin:0 0 20px;color:var(--dim);font-size:.98rem}
+  .sheet label{display:block;font-weight:600;margin:0 0 6px;font-size:.95rem}
+  .sheet .opt{font-weight:400;color:var(--dim)}
+  .sheet textarea,.sheet input[type=text]{
+    width:100%;background:#060B1B;color:var(--mist);border:1px solid var(--rule);border-radius:5px;
+    padding:11px 13px;font:inherit;font-size:1rem;resize:vertical;
+  }
+  .sheet textarea{min-height:120px}
+  .sheet textarea:focus,.sheet input[type=text]:focus{outline:2px solid var(--sky);outline-offset:1px;border-color:var(--sky)}
+  .charcount{text-align:right;color:var(--dim);font-size:.82rem;margin:4px 0 16px}
+  .sheet .field{margin-bottom:22px}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  #sg-msg{margin:0;font-size:.95rem;color:var(--dim)}
+  #sg-msg.bad{color:#FFB4A8}
+  #sg-msg.good{color:#A9E3D3}
+
   @media (max-width:900px){
-    .hero{grid-template-columns:1fr;gap:44px;padding:30px 0 70px}
-    .code{box-shadow:10px 10px 0 var(--yellow);font-size:13px}
+    .hero{grid-template-columns:minmax(0,1fr);gap:48px;padding:30px 0 80px}
+    .codewrap::before{inset:12px -12px -12px 12px}
+    .code{font-size:13px}
     .faq{grid-template-columns:1fr}
   }
   @media (max-width:640px){
     body{font-size:16px}
-    .bar nav{gap:18px}
+    .bar nav{gap:16px}
+    .bar nav .hide-sm{display:none}
+    .brand{font-size:1.1rem}
+    .brand img{width:36px;height:36px}
     .filters input{margin-left:0;width:100%}
-    details.item summary{grid-template-columns:1fr auto 24px;gap:4px 12px;padding-left:10px}
+    details.item summary{grid-template-columns:1fr auto 24px;gap:4px 12px;padding-left:12px}
     .blurb{grid-column:1 / 3;grid-row:2}
     .more{grid-template-columns:1fr;padding:0 12px 26px 16px}
-    .contact{padding:30px 22px}
+    .contact{padding:32px 22px}
+    .tab{writing-mode:horizontal-tb;top:auto;bottom:16px;right:16px;transform:none;border-radius:6px;padding:11px 18px}
+    .tab:hover{padding:11px 18px}
+    footer{padding-bottom:90px}
+    .sheet{padding:22px}
   }
 </style>
 </head>
 <body>
 
+<div class="sky" aria-hidden="true"></div>
+<div class="topline"></div>
+
 <div class="wrap">
   <div class="bar">
-    <a class="brand" href="#top">ScriptForge</a>
+    <a class="brand" href="#top"><img src="logo.png" alt="" width="42" height="42">ScriptForge</a>
     <nav>
       <a href="#shop">Shop</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contact">Contact</a>
+      <a href="#faq" class="hide-sm">Questions</a>
+      <a href="#contact" class="hide-sm">Contact</a>
+      <button type="button" data-open-suggest>Suggest</button>
     </nav>
   </div>
 
@@ -162,6 +258,7 @@
       </div>
       <div>
         <p class="file">ServerScriptService/SaveData.lua</p>
+        <div class="codewrap">
 <pre class="code" aria-label="Example Luau code"><code><span class="k">local</span> DataStoreService = game:GetService(<span class="s">"DataStoreService"</span>)
 <span class="k">local</span> store = DataStoreService:GetDataStore(<span class="s">"PlayerData"</span>)
 
@@ -174,15 +271,21 @@
 	<span class="k">end</span>
 	<span class="k">return false</span>
 <span class="k">end</span></code></pre>
+        </div>
       </div>
     </div>
 
     <section id="shop">
-      <h2>Shop</h2>
-      <p class="lead">Click a product to see what's included.</p>
+      <div class="shophead">
+        <div>
+          <h2>Shop</h2>
+          <p class="lead" id="count">Click a product to see what's included.</p>
+        </div>
+      </div>
       <div class="filters" id="filters"></div>
       <div id="list"></div>
       <p class="nomatch" id="nomatch">Nothing matches that search. Try a shorter word, or clear the search box.</p>
+      <button type="button" class="showmore" id="showmore" hidden></button>
     </section>
 
     <section id="faq">
@@ -192,17 +295,18 @@
         <div><h3>How do I install a product?</h3><p>Import the model or module into Roblox Studio, set the values in the config module, then publish your game. Each product has a setup note that goes through it step by step.</p></div>
         <div><h3>Can I use these in a monetized game?</h3><p>Yes. Use them in your own games however you like. You can't resell the files or share them with other people.</p></div>
         <div><h3>Do you take custom orders?</h3><p>Yes. Message us with what you need and a rough budget, and we'll tell you if we can do it.</p></div>
-        <div><h3>Something isn't working. What now?</h3><p>Contact us with the product name and what you're seeing in the Output window. That's usually enough to find the problem.</p></div>
+        <div><h3>Can I suggest a new product?</h3><p>Yes. Use the Suggestions tab on the side of the page. Ideas for new products, changes to existing ones and problems with the site all go to us directly.</p></div>
       </div>
     </section>
 
     <section id="contact">
       <div class="contact">
         <h2>Talk to us</h2>
-        <p>For support, custom orders, or a question before you buy, the fastest way is Discord. Email works too.</p>
+        <p>For support, custom orders, or a question before you buy, the fastest way is Discord. Email works too, and you can send a suggestion without leaving the page.</p>
         <div class="links">
           <a id="discord" href="https://discord.gg/YOUR-INVITE" target="_blank" rel="noopener">Join the Discord</a>
           <a id="mail" href="mailto:you@example.com">you@example.com</a>
+          <button type="button" class="linkbtn" data-open-suggest>Send a suggestion</button>
         </div>
       </div>
     </section>
@@ -211,9 +315,34 @@
 
 <footer>
   <div class="wrap">
+    <img src="logo.png" alt="" width="32" height="32">
     <p>&copy; <span id="year"></span> ScriptForge. ScriptForge is an independent shop and is not affiliated with, endorsed by, or sponsored by Roblox Corporation. Roblox is a trademark of Roblox Corporation.</p>
   </div>
 </footer>
+
+<button type="button" class="tab" data-open-suggest>Suggestions</button>
+
+<dialog id="suggest" aria-labelledby="sg-title">
+  <form class="sheet" id="sgform" novalidate>
+    <div class="sheet-head">
+      <h2 id="sg-title">Suggest something</h2>
+      <button type="button" class="x" data-close aria-label="Close">&times;</button>
+    </div>
+    <p class="sg-lead">A new product, a change to an existing one, or something on the site that got in your way. It goes straight to our Discord.</p>
+    <div class="field">
+      <label for="sg-idea">Your suggestion</label>
+      <textarea id="sg-idea" name="idea" maxlength="1000" required></textarea>
+      <div class="charcount"><span id="sg-count">0</span> / 1000</div>
+      <label for="sg-name">Your Discord name <span class="opt">(optional, so we can reply)</span></label>
+      <input id="sg-name" name="name" type="text" maxlength="60" autocomplete="off">
+    </div>
+    <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+    <div class="actions">
+      <button class="btn" type="submit" id="sg-send">Send suggestion</button>
+      <p id="sg-msg" role="status" aria-live="polite"></p>
+    </div>
+  </form>
+</dialog>
 
 <script>
 /* ============================================================
@@ -224,24 +353,50 @@
    details  - a short paragraph shown when the row is opened
    includes - bullet points shown when the row is opened
    link     - where "Buy" goes (payment link, Roblox page, Discord ticket...)
+   The shop shows 8 products at first and has a "Show more" button,
+   so you can keep adding as many as you like.
    ============================================================ */
 const PRODUCTS = [
-  { name: "NPC System", category: "Systems", price: "$5",
-    summary: "Advanced + Easy Setup, The best NPC System Created.",
-    details: "A API NPC System created like no other.",
+  { name: "Inventory system", category: "Systems", price: "$12",
+    summary: "Grid inventory with stacking, drag and drop, and saving.",
+    details: "A server-checked inventory so players can't hand themselves items. Slot count, stack sizes and item definitions all live in one config module.",
     includes: ["Server and client scripts", "Item definition module", "Setup note"], link: "#contact" },
   { name: "Round manager", category: "Systems", price: "$9",
     summary: "Lobby, intermission, map voting and the round loop.",
     details: "Runs the full round cycle for a game with several maps. Add a map by dropping a model into a folder.",
     includes: ["Round loop module", "Map voting GUI", "Setup note"], link: "#contact" },
+  { name: "Quest system", category: "Systems", price: "$14",
+    summary: "Daily and one-off quests with progress tracking and rewards.",
+    details: "Define a quest as a small table: what to do, how many times, and the reward. Progress is saved with the player's data.",
+    includes: ["Quest module", "Quest list GUI", "Setup note"], link: "#contact" },
+  { name: "Pet follow system", category: "Systems", price: "$11",
+    summary: "Pets that follow the player, with equip slots and rarities.",
+    details: "Pets trail behind the player and can be equipped from a menu. Add a pet by adding a model and one line in the config.",
+    includes: ["Follow script", "Equip menu", "Setup note"], link: "#contact" },
   { name: "Shop UI kit", category: "UI", price: "$8",
     summary: "An in-game shop screen that works on phones and consoles.",
     details: "Tabs, item previews and purchase prompts, laid out to scale with the screen. Colors and fonts are set in one place.",
     includes: ["ScreenGui with tabs", "Developer product hookup", "Setup note"], link: "#contact" },
+  { name: "Notification toasts", category: "UI", price: "$5",
+    summary: "Small pop-up messages for rewards, errors and tips.",
+    details: "Call one function from any script to show a message. They stack neatly, fade out, and work on phones.",
+    includes: ["Toast module", "Example calls", "Setup note"], link: "#contact" },
+  { name: "Leaderboard UI", category: "UI", price: "$6",
+    summary: "A custom leaderboard that replaces the default player list.",
+    details: "Shows the stats you choose, sorted by the one you pick. Colors and column names come from one config module.",
+    includes: ["Leaderboard GUI", "Stat config", "Setup note"], link: "#contact" },
+  { name: "Settings menu", category: "UI", price: "$7",
+    summary: "A settings screen with toggles and sliders that remember choices.",
+    details: "Music volume, camera options, UI scale. Each setting is saved per player, and you can add your own in a few lines.",
+    includes: ["Settings GUI", "Saving module", "Setup note"], link: "#contact" },
   { name: "Admin panel", category: "Tools", price: "$10",
     summary: "Admin commands with permission levels and a log.",
     details: "Give people different levels of access and see who ran which command. Adding your own command is one small function.",
     includes: ["Panel GUI", "Permission config", "Command log"], link: "#contact" },
+  { name: "Announcer", category: "Tools", price: "$4",
+    summary: "Send a message to every server from an admin command.",
+    details: "Type a message and it shows on every player's screen in every server. Good for update warnings.",
+    includes: ["Announcer script", "Admin hookup", "Setup note"], link: "#contact" },
   { name: "DataStore wrapper", category: "Scripts", price: "$6",
     summary: "Saving and loading with retries and session locking.",
     details: "A small module that handles failed requests and stops two servers from writing the same player's data at once.",
@@ -249,23 +404,38 @@ const PRODUCTS = [
   { name: "Checkpoint kit", category: "Scripts", price: "$5",
     summary: "Obby checkpoints, stage tracking and a leaderboard.",
     details: "Touch a checkpoint to set your spawn. The current stage shows on the leaderboard and is kept when you rejoin.",
-    includes: ["Checkpoint script", "Leaderboard script", "Setup note"], link: "#contact" }
+    includes: ["Checkpoint script", "Leaderboard script", "Setup note"], link: "#contact" },
+  { name: "Cooldown module", category: "Scripts", price: "$4",
+    summary: "Stops players from spamming actions, checked on the server.",
+    details: "Wrap any action in a cooldown check. Each player is tracked separately and cleaned up when they leave.",
+    includes: ["One module", "Usage examples", "Setup note"], link: "#contact" },
+  { name: "Tween helper", category: "Scripts", price: "$3",
+    summary: "Short functions for the animations you write over and over.",
+    details: "Fade, slide, scale and shake for any GUI object in one line each. Easing styles are set by name.",
+    includes: ["One module", "Usage examples", "Setup note"], link: "#contact" }
 ];
 
 const SITE = {
-  discord: "https://discord.gg/TB6mVpEXcuu",
-  email:   "altdeveloper055@gmail.com"
+  discord: "https://discord.gg/YOUR-INVITE",
+  email:   "you@example.com",
+  /* Suggestions are posted here. Anyone who views the page source can see this
+     address, so if it gets spammed, delete it in Discord and make a new one. */
+  webhook: "https://discord.com/api/webhooks/1573385074601238538/HSjdT3FW7WrRyUt438j7W7NlPYFjXsDiaBSngIlBpxEPhh3KJ2ofrlFFX8Q7jgRqsfRS"
 };
 /* ============================================================ */
 
+const PAGE = 8;
 const filters = document.getElementById("filters");
 const list = document.getElementById("list");
 const nomatch = document.getElementById("nomatch");
+const showmore = document.getElementById("showmore");
+const countEl = document.getElementById("count");
 const search = document.createElement("input");
 search.type = "search";
 search.placeholder = "Search";
 search.setAttribute("aria-label", "Search products");
 let active = "All";
+let limit = PAGE;
 
 const discord = document.getElementById("discord");
 const mail = document.getElementById("mail");
@@ -287,7 +457,7 @@ function renderFilters() {
     const b = el("button", "", c);
     b.type = "button";
     b.setAttribute("aria-pressed", String(c === active));
-    b.addEventListener("click", () => { active = c; renderFilters(); renderList(); });
+    b.addEventListener("click", () => { active = c; limit = PAGE; renderFilters(); renderList(); });
     filters.appendChild(b);
   });
   filters.appendChild(search);
@@ -296,11 +466,11 @@ function renderFilters() {
 function renderList() {
   const q = search.value.trim().toLowerCase();
   list.textContent = "";
-  const shown = PRODUCTS.filter(p =>
+  const matches = PRODUCTS.filter(p =>
     (active === "All" || p.category === active) &&
     (!q || (p.name + " " + p.summary + " " + p.details + " " + p.category).toLowerCase().includes(q))
   );
-  shown.forEach(p => {
+  matches.slice(0, limit).forEach(p => {
     const d = el("details", "item");
     const s = el("summary");
     s.appendChild(el("span", "name", p.name));
@@ -319,20 +489,86 @@ function renderList() {
     const right = el("div");
     const ul = el("ul");
     (p.includes || []).forEach(i => ul.appendChild(el("li", "", i)));
-    right.appendChild(el("p", "", p.details));
-    right.firstChild.style.marginBottom = "14px";
+    const desc = el("p", "", p.details);
+    desc.style.marginBottom = "14px";
+    right.appendChild(desc);
     right.appendChild(ul);
     more.appendChild(left);
     more.appendChild(right);
     d.appendChild(more);
     list.appendChild(d);
   });
-  nomatch.style.display = shown.length ? "none" : "block";
+
+  nomatch.style.display = matches.length ? "none" : "block";
+  const left = matches.length - limit;
+  showmore.hidden = left <= 0;
+  if (left > 0) showmore.textContent = "Show " + Math.min(PAGE, left) + " more (" + left + " left)";
+  countEl.textContent = matches.length + (matches.length === 1 ? " product" : " products") +
+    (active !== "All" ? " in " + active : "") + ". Click one to see what's included.";
 }
 
-search.addEventListener("input", renderList);
+search.addEventListener("input", () => { limit = PAGE; renderList(); });
+showmore.addEventListener("click", () => { limit += PAGE; renderList(); });
 renderFilters();
 renderList();
+
+/* ---------------- suggestions ---------------- */
+const dlg = document.getElementById("suggest");
+const form = document.getElementById("sgform");
+const idea = document.getElementById("sg-idea");
+const countNum = document.getElementById("sg-count");
+const msg = document.getElementById("sg-msg");
+const sendBtn = document.getElementById("sg-send");
+const COOLDOWN = 60000;
+let lastSent = 0;
+try { lastSent = Number(localStorage.getItem("sf_last_suggestion")) || 0; } catch (e) {}
+
+function say(text, kind) { msg.textContent = text; msg.className = kind || ""; }
+
+document.querySelectorAll("[data-open-suggest]").forEach(b =>
+  b.addEventListener("click", () => { say(""); dlg.showModal(); idea.focus(); }));
+dlg.querySelector("[data-close]").addEventListener("click", () => dlg.close());
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+idea.addEventListener("input", () => { countNum.textContent = idea.value.length; });
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if (form.elements.website.value) { say("Sent. Thank you.", "good"); return; } /* hidden field: bots only */
+  const text = idea.value.trim();
+  const who = form.elements.name.value.trim();
+  if (text.length < 5) { say("Write a few more words so we know what you mean.", "bad"); idea.focus(); return; }
+  const wait = COOLDOWN - (Date.now() - lastSent);
+  if (wait > 0) { say("Please wait " + Math.ceil(wait / 1000) + " seconds before sending another one.", "bad"); return; }
+
+  const embed = {
+    title: "New suggestion",
+    description: text.slice(0, 1000),
+    color: 0x8FB0FF,
+    footer: { text: "Sent from the ScriptForge site" },
+    timestamp: new Date().toISOString()
+  };
+  if (who) embed.fields = [{ name: "From", value: who.slice(0, 60) }];
+
+  sendBtn.disabled = true;
+  say("Sending...");
+  try {
+    const res = await fetch(SITE.webhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: "ScriptForge site", allowed_mentions: { parse: [] }, embeds: [embed] })
+    });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    lastSent = Date.now();
+    try { localStorage.setItem("sf_last_suggestion", String(lastSent)); } catch (e2) {}
+    form.reset();
+    countNum.textContent = "0";
+    say("Sent. Thank you, we'll take a look.", "good");
+  } catch (err) {
+    say("Couldn't send that. Try again, or message us on Discord.", "bad");
+  } finally {
+    sendBtn.disabled = false;
+  }
+});
 </script>
 </body>
 </html>
